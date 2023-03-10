@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:test01/httpUtils/httpclient.dart';
 import 'package:test01/model/article_list_item_entity.dart';
 import 'package:test01/model/article_list_result_entity.dart';
+import 'package:test01/httpUtils/request.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //EasyLoading.init();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -26,8 +29,10 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      builder: EasyLoading.init(),
     );
   }
 }
@@ -52,7 +57,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  @override
+  void initState() {
+    // TODO: implement initState
+   // EasyLoading.init();
+  }
   void _incrementCounter() async{
     setState((){
       // This call to setState tells the Flutter framework that something has
@@ -64,10 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
 
-    HttpClient client = HttpClient();
-    String url = "/article/list/0/json";
-    ArticleListResultEntity? articleListResultEntity = await client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
-    print(articleListResultEntity.toString());
+    // HttpClient client = HttpClient();
+    // String url = "/article/list/0/json";
+    // ArticleListResultEntity? articleListResultEntity = await client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
+    // print(articleListResultEntity.toString());
+
+
 
   }
 
@@ -82,10 +93,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
 
-    HttpClient client = HttpClient();
-    String url = "/article/list/0/json";
-    ArticleListResultEntity? articleListResultEntity = await client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
-    print(articleListResultEntity.toString());
+    // HttpClient client = HttpClient();
+    // String url = "/article/list/0/json";
+    // ArticleListResultEntity? articleListResultEntity = await client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
+    // print(articleListResultEntity.toString());
+
+    request(() async{
+      HttpClient client = HttpClient();
+      String url = "/article/list/0/json";
+      ArticleListResultEntity? articleListResultEntity = await client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
+    });
 
   }
 
@@ -143,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), 
       // This trailing comma makes auto-formatting nicer for build methods.
+
 
  
     );
