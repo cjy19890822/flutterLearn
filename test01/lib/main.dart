@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:test01/httpUtils/httpclient.dart';
+import 'package:test01/model/article_list_item_entity.dart';
+import 'package:test01/model/article_list_result_entity.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -57,7 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
+
+      HttpClient client = HttpClient();
+      String url = "/article/list/0/json";
+      client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
+      
       _counter++;
+
+
+
     });
   }
 

@@ -1,20 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:test01/httpUtils/request_config.dart';
 import 'package:dio/dio.dart';
 import 'package:test01/httpUtils/ApiException.dart';
 import 'package:test01/model/api_response_entity.dart';
 import 'package:test01/httpUtils/RawData.dart';
-
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 class HttpClient {
   late Dio _dio;
 
   HttpClient() {
     _dio = Dio(BaseOptions(
         baseUrl: RequestConfig.baseUrl,
-        sendTimeout: RequestConfig.connectTimeout,
-        receiveTimeout: RequestConfig.receiveTimeout));
+        sendTimeout: const Duration(milliseconds: 15000),
+        receiveTimeout: const Duration(milliseconds: 15000)));
+    _dio.interceptors.add(PrettyDioLogger());
   }
 
   HttpClient.create(this._dio);
