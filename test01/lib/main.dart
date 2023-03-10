@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test01/httpUtils/httpclient.dart';
 import 'package:test01/model/article_list_item_entity.dart';
 import 'package:test01/model/article_list_result_entity.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -52,24 +53,44 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
+  void _incrementCounter() async{
+    setState((){
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-
-      HttpClient client = HttpClient();
-      String url = "/article/list/0/json";
-      client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
-      
       _counter++;
-
-
-
     });
+
+
+    HttpClient client = HttpClient();
+    String url = "/article/list/0/json";
+    ArticleListResultEntity? articleListResultEntity = await client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
+    print(articleListResultEntity.toString());
+
   }
+
+  void _incrementCounter2() async{
+    setState((){
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
+
+
+    HttpClient client = HttpClient();
+    String url = "/article/list/0/json";
+    ArticleListResultEntity? articleListResultEntity = await client.get<ArticleListResultEntity>(url,onError:((Exception e){print(e.toString()); return false;}));
+    print(articleListResultEntity.toString());
+
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            ElevatedButton(onPressed: _incrementCounter2, child: Text('test btn'))
           ],
         ),
       ),
@@ -119,7 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ), 
+      // This trailing comma makes auto-formatting nicer for build methods.
+
+ 
     );
   }
 }
