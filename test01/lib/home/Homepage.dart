@@ -3,6 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:test01/httpUtils/apis.dart';
+import 'package:test01/httpUtils/httpclient.dart';
+import 'package:test01/model/api_response_entity.dart';
+import 'package:test01/model/article_list_result_entity.dart';
 
 class Homepage extends StatefulWidget {
   // TODO: add state variables, methods and constructor params
@@ -14,6 +18,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Homepage> {
+  ApiResponseEntity<ArticleListResultEntity>? resultentity;
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -44,7 +49,7 @@ class _MyHomePageState extends State<Homepage> {
       child: SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
-        header: WaterDropHeader(
+        header: const WaterDropHeader(
           complete: Center(
             child: Text("加载完成",
                 style: TextStyle(fontSize: 12, color: Colors.black)),
@@ -84,8 +89,7 @@ class _MyHomePageState extends State<Homepage> {
                   indicatorLayout: PageIndicatorLayout.SCALE,
                   pagination: SwiperPagination(builder: SwiperPagination.dots),
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        color: ((index % 2) == 0 ? Colors.blue : Colors.red));
+                    return CachedNetworkImage(imageUrl: resultentity.data.datas[index].);
                   },
                 ),
               ),
@@ -97,7 +101,10 @@ class _MyHomePageState extends State<Homepage> {
   }
 
   void onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 1000));
+   // await Future.delayed(Duration(milliseconds: 1000));
+    String url = Apis.getArticleList + '0/json';
+     ApiResponseEntity<ArticleListResultEntity>? entity = await HttpClient().get<ApiResponseEntity<ArticleListResultEntity>?>(url);
+     resultentity = entity;
     _refreshController.refreshCompleted();
   }
 
