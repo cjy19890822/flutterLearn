@@ -7,6 +7,7 @@ import 'package:test01/httpUtils/apis.dart';
 import 'package:test01/httpUtils/httpclient.dart';
 import 'package:test01/model/api_response_entity.dart';
 import 'package:test01/model/article_list_result_entity.dart';
+import 'package:test01/model/banner_bean_entity.dart';
 
 class Homepage extends StatefulWidget {
   // TODO: add state variables, methods and constructor params
@@ -18,14 +19,29 @@ class Homepage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Homepage> {
-  ApiResponseEntity<ArticleListResultEntity>? resultentity;
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController(initialRefresh: false);
+  List<BannerBeanEntity>? bannerEntity;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("initState");
+    getData();
+  }
+
+  void getData() async {
+    bannerEntity =
+    (await HttpClient().get<List<BannerBeanEntity>>(Apis.getbannerList));
+    print(bannerEntity);
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: add widget build method
+    print("build");
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
           middle: const Text("首页"),
@@ -89,7 +105,12 @@ class _MyHomePageState extends State<Homepage> {
                   indicatorLayout: PageIndicatorLayout.SCALE,
                   pagination: SwiperPagination(builder: SwiperPagination.dots),
                   itemBuilder: (BuildContext context, int index) {
-                    return CachedNetworkImage(imageUrl: resultentity.data.datas[index].);
+                    return (bannerEntity?.length != 3) ?? false
+                        ? Image.asset("assets/images/ic_head.jpeg")
+                        : CachedNetworkImage(
+                        imageUrl: (bannerEntity?[index])?.imagePath ?? "assets/images/ic_head.jpeg",
+                        placeholder: (context, url) =>
+                            Image.asset("assets/images/ic_head.jpeg"),);
                   },
                 ),
               ),
@@ -101,11 +122,14 @@ class _MyHomePageState extends State<Homepage> {
   }
 
   void onRefresh() async {
-   // await Future.delayed(Duration(milliseconds: 1000));
+    print("onRefresh");
+    // await Future.delayed(Duration(milliseconds: 1000));
     String url = Apis.getArticleList + '0/json';
-     ApiResponseEntity<ArticleListResultEntity>? entity = await HttpClient().get<ApiResponseEntity<ArticleListResultEntity>?>(url);
-     resultentity = entity;
+    ApiResponseEntity<ArticleListResultEntity>? entity = await HttpClient().get<
+        ApiResponseEntity<ArticleListResultEntity>?>(url);
+    // print(entity.data[0].toString());
     _refreshController.refreshCompleted();
+    print(bannerEntity);
   }
 
   void _onLoading() async {

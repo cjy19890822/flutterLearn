@@ -8,4 +8,6 @@ class Apis{
   // 首页文章列表
   static const String getArticleList = 'article/list/';
 
+  static const String getbannerList = '/banner/json';
+
 }

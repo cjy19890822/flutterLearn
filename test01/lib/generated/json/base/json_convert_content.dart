@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:test01/model/article_list_item_entity.dart';
 import 'package:test01/model/article_list_result_entity.dart';
+import 'package:test01/model/banner_bean_entity.dart';
 import 'package:test01/model/tag_model_entity.dart';
 
 JsonConvert jsonConvert = JsonConvert();
@@ -16,6 +17,7 @@ class JsonConvert {
 	static final Map<String, JsonConvertFunction> convertFuncMap = {
 		(ArticleListItemEntity).toString(): ArticleListItemEntity.fromJson,
 		(ArticleListResultEntity).toString(): ArticleListResultEntity.fromJson,
+		(BannerBeanEntity).toString(): BannerBeanEntity.fromJson,
 		(TagModelEntity).toString(): TagModelEntity.fromJson,
 	};
 
@@ -100,6 +102,9 @@ List<T>? convertListNotNull<T>(dynamic value, {EnumConvertFunction? enumConvert}
 		}
 		if(<ArticleListResultEntity>[] is M){
 			return data.map<ArticleListResultEntity>((Map<String, dynamic> e) => ArticleListResultEntity.fromJson(e)).toList() as M;
+		}
+		if(<BannerBeanEntity>[] is M){
+			return data.map<BannerBeanEntity>((Map<String, dynamic> e) => BannerBeanEntity.fromJson(e)).toList() as M;
 		}
 		if(<TagModelEntity>[] is M){
 			return data.map<TagModelEntity>((Map<String, dynamic> e) => TagModelEntity.fromJson(e)).toList() as M;
