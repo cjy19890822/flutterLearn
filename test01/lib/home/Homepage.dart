@@ -3,12 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:test01/httpUtils/ApiException.dart';
 import 'package:test01/httpUtils/apis.dart';
 import 'package:test01/httpUtils/httpclient.dart';
 import 'package:test01/model/api_response_entity.dart';
+import 'package:test01/model/article_list_item_entity.dart';
 import 'package:test01/model/article_list_result_entity.dart';
 import 'package:test01/model/banner_bean_entity.dart';
-
+import 'package:test01/Widgets/homelistcell.dart';
 class Homepage extends StatefulWidget {
   // TODO: add state variables, methods and constructor params
   const Homepage({Key? key}) : super(key: key);
@@ -21,8 +23,9 @@ class Homepage extends StatefulWidget {
 class _MyHomePageState extends State<Homepage> {
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
   List<BannerBeanEntity>? bannerEntity;
+  ArticleListResultEntity? articleResultList;
 
   @override
   void initState() {
@@ -32,16 +35,29 @@ class _MyHomePageState extends State<Homepage> {
     getData();
   }
 
+//  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    super.setState(fn);
+    print("setState");
+  }
+
   void getData() async {
+    print("getData");
     bannerEntity =
-    (await HttpClient().get<List<BannerBeanEntity>>(Apis.getbannerList));
-    print(bannerEntity);
+        (await HttpClient().get<List<BannerBeanEntity>>(Apis.getbannerList));
+    articleResultList = (await HttpClient().get<ArticleListResultEntity>(
+        (Apis.getArticleList + '/0/json'),
+        onError: (apiException) {print(apiException.message);return false;}));
+    setState(() {});
+    print("setState done");
+    // print(articleResultList);
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: add widget build method
-    print("build");
+    print("build  bannerEntity.size==${bannerEntity?.length}");
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
           middle: const Text("首页"),
@@ -105,16 +121,33 @@ class _MyHomePageState extends State<Homepage> {
                   indicatorLayout: PageIndicatorLayout.SCALE,
                   pagination: SwiperPagination(builder: SwiperPagination.dots),
                   itemBuilder: (BuildContext context, int index) {
+                    // return (bannerEntity?.length != 3) ?? false
+                    //     ? Image.asset("assets/images/ic_head.jpeg")
+                    //     : CachedNetworkImage(
+                    //     imageUrl: (bannerEntity?[index])?.imagePath ?? "assets/images/ic_head.jpeg",
+                    //     placeholder: (context, url) =>
+                    //         Image.asset("assets/images/ic_head.jpeg"),);
                     return (bannerEntity?.length != 3) ?? false
                         ? Image.asset("assets/images/ic_head.jpeg")
-                        : CachedNetworkImage(
-                        imageUrl: (bannerEntity?[index])?.imagePath ?? "assets/images/ic_head.jpeg",
-                        placeholder: (context, url) =>
-                            Image.asset("assets/images/ic_head.jpeg"),);
+                        : Image.network((bannerEntity?[index])?.imagePath ??
+                            "assets/images/ic_head.jpeg");
                   },
                 ),
               ),
             ),
+            SliverList(
+                delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                if (articleResultList != null) {
+                   ArticleListItemEntity model =
+                      articleResultList?.datas?[index] as ArticleListItemEntity;
+                  return Homelistcell(model,(_){print("set");});
+                } else {
+                  return Container();
+                }
+              },
+              childCount: articleResultList?.datas?.length ?? 1,
+            )),
           ],
         ),
       ),
@@ -124,19 +157,19 @@ class _MyHomePageState extends State<Homepage> {
   void onRefresh() async {
     print("onRefresh");
     // await Future.delayed(Duration(milliseconds: 1000));
-    String url = Apis.getArticleList + '0/json';
-    ApiResponseEntity<ArticleListResultEntity>? entity = await HttpClient().get<
-        ApiResponseEntity<ArticleListResultEntity>?>(url);
+    String url = Apis.getArticleList + '/0/json';
+    ApiResponseEntity<ArticleListResultEntity>? entity = await HttpClient()
+        .get<ApiResponseEntity<ArticleListResultEntity>?>(url);
     // print(entity.data[0].toString());
     _refreshController.refreshCompleted();
     print(bannerEntity);
   }
 
   void _onLoading() async {
-    await Future.delayed(Duration(milliseconds: 1000));
-    items.add((items.length + 1).toString());
-    if (mounted) setState(() {});
-    _refreshController.loadComplete();
+    // await Future.delayed(Duration(milliseconds: 1000));
+    // items.add((items.length + 1).toString());
+    // if (mounted) setState(() {});
+    // _refreshController.loadComplete();
   }
 
   Widget _item(city) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test01/Home/MainPage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:test01/home/Homepage.dart';
 //import 'package:project01/main.dart';
 class WelcomePage extends StatelessWidget {
   // TODO: add state variables, methods and constructor params
@@ -60,12 +61,12 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: const Text("点击进入"),
                 onPressed: () {
-                 // AccountManager().saveNotFirstLaunch();
-                 // Get.offAllNamed(Routes.main);
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=>MainPage()));
+                  // AccountManager().saveNotFirstLaunch();
+                  // Get.offAllNamed(Routes.main);
+                  Navigator.push(context, MaterialPageRoute(builder:(context)=>Homepage()));
                 },
+                child: const Text("点击进入"),
               ),
             ),
           )
