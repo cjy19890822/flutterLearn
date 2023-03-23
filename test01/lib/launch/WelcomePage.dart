@@ -64,7 +64,7 @@ class WelcomePage extends StatelessWidget {
                 onPressed: () {
                   // AccountManager().saveNotFirstLaunch();
                   // Get.offAllNamed(Routes.main);
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=>Homepage()));
+                  Navigator.push(context, MaterialPageRoute(builder:(context)=>MainPage()));
                 },
                 child: const Text("点击进入"),
               ),

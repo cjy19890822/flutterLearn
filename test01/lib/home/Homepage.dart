@@ -11,6 +11,8 @@ import 'package:test01/model/article_list_item_entity.dart';
 import 'package:test01/model/article_list_result_entity.dart';
 import 'package:test01/model/banner_bean_entity.dart';
 import 'package:test01/Widgets/homelistcell.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class Homepage extends StatefulWidget {
   // TODO: add state variables, methods and constructor params
   const Homepage({Key? key}) : super(key: key);
@@ -31,7 +33,6 @@ class _MyHomePageState extends State<Homepage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("initState");
     getData();
   }
 
@@ -39,25 +40,22 @@ class _MyHomePageState extends State<Homepage> {
   void setState(VoidCallback fn) {
     // TODO: implement setState
     super.setState(fn);
-    print("setState");
   }
 
   void getData() async {
-    print("getData");
     bannerEntity =
         (await HttpClient().get<List<BannerBeanEntity>>(Apis.getbannerList));
     articleResultList = (await HttpClient().get<ArticleListResultEntity>(
-        (Apis.getArticleList + '/0/json'),
-        onError: (apiException) {print(apiException.message);return false;}));
+        (Apis.getArticleList + '/0/json'), onError: (apiException) {
+      return false;
+    }));
     setState(() {});
-    print("setState done");
     // print(articleResultList);
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: add widget build method
-    print("build  bannerEntity.size==${bannerEntity?.length}");
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
           middle: const Text("首页"),
@@ -68,9 +66,7 @@ class _MyHomePageState extends State<Homepage> {
               // child: Image.asset("assets/images/upgrade.png"),
               child: Icon(CupertinoIcons.search),
               //autofocus:false ,
-              onPressed: () {
-                print("press");
-              },
+              onPressed: () {},
               style: ButtonStyle(
                 overlayColor: MaterialStateProperty.resolveWith((states) {
                   return Colors.transparent;
@@ -139,9 +135,19 @@ class _MyHomePageState extends State<Homepage> {
                 delegate: SliverChildBuilderDelegate(
               (context, index) {
                 if (articleResultList != null) {
-                   ArticleListItemEntity model =
+                  ArticleListItemEntity model =
                       articleResultList?.datas?[index] as ArticleListItemEntity;
-                  return Homelistcell(model,(_){print("set");});
+                  return Homelistcell(model, (model) async {
+                    print('*******${model.title}${model.id}+*******${model.link}');
+                   // if (model.id == 24742) {
+                      if (model.link != null) {
+                        final url = Uri.parse(model.link.toString());
+                      //  if (await canLaunchUrl(url)) {
+                          launchUrl(url, mode: LaunchMode.externalApplication);
+                      //  }
+                      }
+                 //   }
+                  });
                 } else {
                   return Container();
                 }
@@ -155,14 +161,12 @@ class _MyHomePageState extends State<Homepage> {
   }
 
   void onRefresh() async {
-    print("onRefresh");
     // await Future.delayed(Duration(milliseconds: 1000));
     String url = Apis.getArticleList + '/0/json';
     ApiResponseEntity<ArticleListResultEntity>? entity = await HttpClient()
         .get<ApiResponseEntity<ArticleListResultEntity>?>(url);
     // print(entity.data[0].toString());
     _refreshController.refreshCompleted();
-    print(bannerEntity);
   }
 
   void _onLoading() async {
