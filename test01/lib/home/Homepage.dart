@@ -12,6 +12,7 @@ import 'package:test01/model/article_list_result_entity.dart';
 import 'package:test01/model/banner_bean_entity.dart';
 import 'package:test01/Widgets/homelistcell.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:test01/home/webWidget.dart';
 
 class Homepage extends StatefulWidget {
   // TODO: add state variables, methods and constructor params
@@ -142,8 +143,9 @@ class _MyHomePageState extends State<Homepage> {
                    // if (model.id == 24742) {
                       if (model.link != null) {
                         final url = Uri.parse(model.link.toString());
+                        Navigator.of(context,rootNavigator: true).push(CupertinoPageRoute(builder: (context)=>WebWidget(model.link.toString())));
                       //  if (await canLaunchUrl(url)) {
-                          launchUrl(url, mode: LaunchMode.externalApplication);
+                         // launchUrl(url, mode: LaunchMode.externalApplication);
                       //  }
                       }
                  //   }
