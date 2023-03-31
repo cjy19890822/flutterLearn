@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:test01/httpUtils/ApiException.dart';
 import 'package:test01/model/api_response_entity.dart';
 import 'package:test01/httpUtils/RawData.dart';
+import 'package:test01/httpUtils/apis.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 class HttpClient {
   late Dio _dio;

@@ -10,4 +10,7 @@ class Apis{
 
   static const String getbannerList = '/banner/json';
 
+  // 项目分类
+  static const String getProjectClassify = '/project/tree/json';
+
 }

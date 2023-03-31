@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:test01/ProjectPage/projectPage.dart';
 import 'package:test01/launch/WelcomePage.dart';
 import 'package:test01/home/Homepage.dart';
 class MainPage extends StatelessWidget {
   // TODO: add state variables, methods and constructor params
   MainPage();
-
+  CupertinoTabController tabController =  CupertinoTabController();
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
         tabBar: CupertinoTabBar(items: items),
+        controller: tabController,
         tabBuilder:(context,index){
           final type = MainTagType.values[index];
           return CupertinoTabView(builder: (context){
@@ -72,7 +74,7 @@ List<BottomNavigationBarItem> get items {
       case MainTagType.home:
         return  Homepage();
       case MainTagType.project:
-        return  Homepage();
+        return  ProjectPage();
       case MainTagType.publicNumber:
         return  WelcomePage();
       case MainTagType.tree:
